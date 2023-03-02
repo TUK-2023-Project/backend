@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '*'
-  
 ]
 
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000','http://localhost:80'
@@ -48,9 +47,11 @@ INSTALLED_APPS = [
     'signlanguage',
     'users',
 
-     'corsheaders', #CorsError
-    'channels',
+    'corsheaders', #CorsError
+    'channels'
 ]
+
+ASGI_APPLICATION = 'backend.routing.application'	# backend 는 django 프로젝트 이름
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', #CorsError
@@ -63,6 +64,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 ROOT_URLCONF = "backend.urls"
 

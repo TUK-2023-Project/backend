@@ -11,3 +11,4 @@ gunicorn==20.1.0
 # toml==0.10.2
 django-environ
 mysqlclient==2.1.1
+channels
