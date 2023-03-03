@@ -9,19 +9,29 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
         # Initialize a variable to keep track of the total size of received video data
         self.total_size = 0
 
-        while True:
-            # Wait for 2 seconds
-            await asyncio.sleep(2)
-
-            # Send the total size to the front-end as a JSON message
-            await self.send(text_data=json.dumps({
-                'message': f'Total video data size: {self.total_size}'
-            }))
+      
 
     async def receive(self, text_data):
         # Get the video data from the front-end
         video_data = json.loads(text_data)
 
-        # Increment the total size of the received video data
-        self.total_size += len(video_data)
+  
+        landmarks = []
+
+        for item in video_data['message']:
+            for sub_item in item:
+                 if isinstance(sub_item, dict):
+                    landmarks.append({"landmarks": sub_item['landmarks']})
+
+        print(landmarks)
+        
+        
+        # landmarks 데이터 AI처리
+        # AI처리된 결과를 return하기
+
+
+
+        await self.send(text_data=json.dumps({
+            'message': 'Data received successfully'
+        }))
 
