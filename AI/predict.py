@@ -30,9 +30,9 @@ def predict_one_gesture(data):
 
     angle = np.degrees(angle) # Convert radian to degree
 
-    # Inference gesture
+  
     data = np.array([angle], dtype=np.float32)
-    ret, results, neighbours, dist = knn.findNearest(data, 3)
+    _, results, _, _ = knn.findNearest(data, 3)
     idx = int(results[0][0])
     return idx
 
