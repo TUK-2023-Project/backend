@@ -12,3 +12,6 @@ gunicorn==20.1.0
 django-environ
 mysqlclient==2.1.1
 channels
+
+# AI
+opencv-python
