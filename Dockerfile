@@ -14,7 +14,15 @@ ENV DJANGO_CORS_ORIGIN_WHITELIST $DJANGO_CORS_ORIGIN_WHITELIST
 WORKDIR /backend
 COPY requirements.txt /backend/
 
+# AI
+RUN su -
+RUN apt-get update 
+RUN apt-get install libgl1-mesa-glx -y
+
+# Install 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+
+
 
 COPY . /backend/

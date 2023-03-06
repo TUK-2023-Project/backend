@@ -25,8 +25,13 @@ SECRET_KEY = "django-insecure-cr)vvqzsg7##)a1e=mu1e0x#_(kyov96bdsr_1z_wfa()+niof
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '*'
+]
 
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000','http://localhost:80'
+
+]
 
 # Application definition
 
@@ -37,13 +42,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
+    
+ 
     'signlanguage',
     'users',
 
+    'corsheaders', #CorsError
+    'channels'
 ]
 
+ASGI_APPLICATION = 'backend.routing.application'	# backend 는 django 프로젝트 이름
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', #CorsError
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -52,6 +63,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 ROOT_URLCONF = "backend.urls"
 
@@ -82,7 +99,7 @@ DATABASES = {
         'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.mysql'),
         #  'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
         'NAME': os.environ.get('SQL_DATABASE', 'eg_db'),
-        # 'USER': os.environ.get('SQL_USER', 'root'),
+        # 'USER': os.environ.get('SQL_USER', 'root'), //로컬에서는 주석풀기
         'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', '1234'),
         'HOST': os.environ.get('SQL_HOST', 'db'),
         'PORT': os.environ.get('SQL_PORT', '3306'),
