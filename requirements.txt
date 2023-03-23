@@ -13,5 +13,7 @@ django-environ
 mysqlclient==2.1.1
 channels
 
+djangorestframework-simplejwt== 5.2.2
+bcrypt
 # AI
 opencv-python

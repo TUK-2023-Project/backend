@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 import os
+# from django.contrib.auth.models import UserData
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,10 +47,32 @@ INSTALLED_APPS = [
  
     'signlanguage',
     'users',
+    # 'users.apps.usersConfig',
 
     'corsheaders', #CorsError
-    'channels'
+    'channels',
+    'rest_framework',
+     'rest_framework_simplejwt',
 ]
+
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+  
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+   
+}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'TOKEN_USER_CLASS': 'users.User', 
+}
+
+
+# AUTH_USER_MODEL = 'backend.user'
 
 ASGI_APPLICATION = 'backend.routing.application'	# backend 는 django 프로젝트 이름
 
@@ -97,15 +120,15 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.mysql'),
-        #  'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
         'NAME': os.environ.get('SQL_DATABASE', 'eg_db'),
-        # 'USER': os.environ.get('SQL_USER', 'root'), //로컬에서는 주석풀기
+        'USER': os.environ.get('SQL_USER', 'root'), 
         'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', '1234'),
         'HOST': os.environ.get('SQL_HOST', 'db'),
         'PORT': os.environ.get('SQL_PORT', '3306'),
     }
 }
-
+AUTH_USER_MODEL = 'users.UserData'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -137,7 +160,7 @@ USE_I18N = True
 
 USE_TZ = False
 
-
+SESSION_COOKIE_SECURE = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
