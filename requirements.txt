@@ -15,5 +15,8 @@ channels
 
 djangorestframework-simplejwt== 5.2.2
 bcrypt
+
+django_storages
+boto3
 # AI
 opencv-python
