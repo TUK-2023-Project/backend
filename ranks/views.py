@@ -4,6 +4,7 @@ from rest_framework import status
 from .models import Rank
 from .serializers import RankSerializer
 from django.contrib.auth import get_user_model
+from users.models import UserData
 
 User = get_user_model()
 
@@ -40,6 +41,12 @@ class RankView(APIView):
         serializer = RankSerializer(rank)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     def get(self, request):
-        ranks = Rank.objects.all().order_by('rank')
+        ranks = Rank.objects.all().order_by('rank')[:10]
         serializer = RankSerializer(ranks, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        response_data = []
+        for data in serializer.data:
+            user = UserData.objects.get(pk=data['user_id'])
+            data['user_name'] = user.name
+            del data['user_id']
+            response_data.append(data)
+        return Response(response_data, status=status.HTTP_200_OK)
