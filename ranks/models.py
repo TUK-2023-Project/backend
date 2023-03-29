@@ -7,7 +7,6 @@ User = get_user_model()
 class Rank(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='ranks', db_column='user_id')
-    rank = models.IntegerField(null=True)
     score = models.IntegerField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

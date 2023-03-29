@@ -8,4 +8,4 @@ class RankSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Rank
-        fields = ('rank', 'score', 'user_id', 'user_name')
+        fields = ( 'score', 'user_id', 'user_name')

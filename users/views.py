@@ -4,7 +4,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .utils import *
+# from .utils import *
 from .models import *
 
 import bcrypt
