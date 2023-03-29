@@ -3,9 +3,8 @@ from rest_framework import serializers
 from .models import Rank
 
 class RankSerializer(serializers.ModelSerializer):
-    user_id = serializers.ReadOnlyField(source='user_id.id')
     user_name = serializers.CharField(source='user_id.name', read_only=True)
 
     class Meta:
         model = Rank
-        fields = ( 'score', 'user_id', 'user_name')
+        fields = ('score', 'user_name')

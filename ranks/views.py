@@ -34,12 +34,24 @@ class RankView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def get(self, request):
-        ranks = Rank.objects.all().order_by('rank')[:10]
-        serializer = RankSerializer(ranks, many=True)
+        ranks = Rank.objects.all().order_by('-score')
+        rank_list = list(ranks)
+
+        groups = []
+        for k, g in groupby(rank_list, key=lambda x: x.score):
+            groups.append(list(g))
+
         response_data = []
-        for data in serializer.data:
-            user = UserData.objects.get(pk=data['user_id'])
-            data['user_name'] = user.name
-            del data['user_id']
-            response_data.append(data)
-        return Response(response_data, status=status.HTTP_200_OK)
+        rank = 1
+        for group in groups:
+            for r in group:
+                serializer = RankSerializer(r)
+                data = serializer.data
+                user = UserData.objects.get(pk=r.user_id.id)
+                data['user_name'] = user.name
+                data['rank'] = rank
+        
+                response_data.append(data)
+            rank += len(group)
+
+        return Response(response_data[:10], status=status.HTTP_200_OK)
