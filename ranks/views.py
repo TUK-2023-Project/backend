@@ -6,13 +6,21 @@ from .serializers import RankSerializer
 from django.contrib.auth import get_user_model
 from users.models import UserData
 from itertools import groupby
-
+from rest_framework_jwt.utils import jwt_decode_handler
 
 User = get_user_model()
 
+def get_user_id_from_token(token):
+    decoded_token = jwt_decode_handler(token)
+    user_id = decoded_token['user_id']
+    return user_id
+
 class RankView(APIView):
+  
+    
     def post(self, request):
-        user_id = request.data.get('user_id')
+        token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
+        user_id = get_user_id_from_token(token)
         score = request.data.get('score')
 
         if not user_id or not score:
