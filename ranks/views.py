@@ -19,8 +19,12 @@ class RankView(APIView):
   
     
     def post(self, request):
-        token = request.META.get('HTTP_AUTHORIZATION', '').split(' ')[1]
-        user_id = get_user_id_from_token(token)
+        token = request.META.get('HTTP_ACCESS', None)
+       
+        if token is None:
+            return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+
+        user_id = get_user_id_from_token(token.split(' ')[1])
         score = request.data.get('score')
 
         if not user_id or not score:
