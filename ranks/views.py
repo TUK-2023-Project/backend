@@ -6,13 +6,20 @@ from .serializers import RankSerializer
 from django.contrib.auth import get_user_model
 from users.models import UserData
 from itertools import groupby
+from rest_framework.exceptions import AuthenticationFailed
 from utils import get_user_id_from_token
 
 User = get_user_model()
 
 class RankView(APIView):
   
-    
+      
+    """
+    이름 : 정태원
+    내용 : score정보를 DB에 저장합니다.
+    날짜 : 3/30
+    """
+
     def post(self, request):
         token = request.META.get('HTTP_ACCESS', None)
        
@@ -43,6 +50,12 @@ class RankView(APIView):
 
         return Response(status=status.HTTP_201_CREATED)
 
+
+    """
+    이름 : 정태원
+    내용 : 상위 10개의 랭킹정보와 사용자 id값을 배열로 return합니다. 동점자의 경우 같은 순위를 처리합니다.
+    날짜 : 3/30
+    """
     def get(self, request):
         ranks = Rank.objects.all().order_by('-score')
         rank_list = list(ranks)
