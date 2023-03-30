@@ -1,7 +1,8 @@
 import uuid
 from django.db import models
 class SignWord(models.Model):
-    user_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)
+    sign_id = models.IntegerField(primary_key=True)
+    #id=models.IntegerField()(primary_key=True, Autoin, editable=False, null=False)
     word = models.CharField(max_length=100, unique=True)
     #user_id=models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)
     wordtype = models.CharField(max_length=100)
@@ -12,8 +13,7 @@ class SignWord(models.Model):
     is_deleted=models.BooleanField(default=False)
 
 
-    def __str__(self):
-        return self.name
+
 
     class Meta:
         db_table = 'signword'
