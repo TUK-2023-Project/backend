@@ -6,14 +6,9 @@ from .serializers import RankSerializer
 from django.contrib.auth import get_user_model
 from users.models import UserData
 from itertools import groupby
-from rest_framework_jwt.utils import jwt_decode_handler
+from utils import get_user_id_from_token
 
 User = get_user_model()
-
-def get_user_id_from_token(token):
-    decoded_token = jwt_decode_handler(token)
-    user_id = decoded_token['user_id']
-    return user_id
 
 class RankView(APIView):
   
@@ -22,9 +17,13 @@ class RankView(APIView):
         token = request.META.get('HTTP_ACCESS', None)
        
         if token is None:
-            return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+         return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
 
-        user_id = get_user_id_from_token(token.split(' ')[1])
+        try:
+            user_id = get_user_id_from_token(token.split(' ')[1])
+        except AuthenticationFailed as e:
+            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
         score = request.data.get('score')
 
         if not user_id or not score:
@@ -42,8 +41,7 @@ class RankView(APIView):
             rank.score = score
             rank.save()
 
-        serializer = RankSerializer(rank)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request):
         ranks = Rank.objects.all().order_by('-score')
