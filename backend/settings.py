@@ -47,6 +47,7 @@ INSTALLED_APPS = [
  
     'signlanguage',
     'users',
+    'ranks',
     # 'users.apps.usersConfig',
 
     'corsheaders', #CorsError

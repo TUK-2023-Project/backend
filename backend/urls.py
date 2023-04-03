@@ -8,6 +8,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('signlanguage/', include('signlanguage.urls')),
     path('api/v1/users/',include('users.urls')),
+    path('api/v1/ranks/',include('ranks.urls')),
      
 
 ]
