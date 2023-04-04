@@ -20,13 +20,13 @@ class RegisterView(APIView):
         serializer.save()
         return Response(serializer.data)
 
-# import jwt
-# from rest_framework_simplejwt.tokens import AccessToken
-# token_str ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc5ODE4OTgzLCJpYXQiOjE2Nzk4MTE3ODMsImp0aSI6IjdmODYwM2E5YjNiZjQ4NDJhZGEzZThhNzcwNDAyMDU1IiwidXNlcl9pZCI6M30.oqVdmhLkmL0ByXd-clb-xNetfaMvahylnd7IHRek0dY"
-# access_token = AccessToken(token_str)
-# user1 = UserData.objects.get(id=access_token['user_id'])
-# print(user1)
+def DuplicateCheck(request):
 
+    if request.method == 'POST':
+        email = request.POST['email']
+        email=SignWord.objects.get(email = email)
+        if not email:
+             return JsonResponse({"status":200})
 
-        # print("-------------------")
-        # print("3333333333333333333333333")
+        else:
+            return JsonResponse({"status":400})
