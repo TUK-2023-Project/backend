@@ -24,9 +24,11 @@ def DuplicateCheck(request):
 
     if request.method == 'POST':
         email = request.POST['email']
-        email=SignWord.objects.get(email = email)
-        if not email:
-             return JsonResponse({"status":200})
+        #email=UserData.objects.get(email = email)
+        email=UserData.objects.filter(email = email).first()
+   
+        if email:
+             return JsonResponse({"status":400})
 
         else:
-            return JsonResponse({"status":400})
+            return JsonResponse({"status":200})

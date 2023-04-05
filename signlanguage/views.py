@@ -9,6 +9,8 @@ from .models import *
 import os
 import sys
 from .serializers import *
+from rest_framework import status
+from rest_framework.response import Response
 # sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 # from users import models
 
@@ -36,13 +38,15 @@ def get_file_url(request):
         token = request.META.get('HTTP_ACCESS', None)
        
         if token is None:
-         return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
-
+         return JsonResponse({'message': '토큰이 필요합니다'})
+       
         try:
+         
             user_id = get_user_id_from_token(token.split(' ')[1])
+       
         except AuthenticationFailed as e:
-            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
+            return JsonResponse({'message': str(e)})
 
         s3_client = boto3.client(
             's3',
@@ -61,11 +65,10 @@ def get_file_url(request):
             word = request.POST['word']#ex'기역'
             wordtype = request.POST['wordtype'] 
             context = request.POST['context']
-            
+
         url = "http://"+AWS_STORAGE_BUCKET_NAME+".s3.ap-northeast-2.amazonaws.com/" + sign_id+ "." + type
         s3_client.put_object(Body=files, Bucket=AWS_STORAGE_BUCKET_NAME, Key=sign_id+"." + type)
         SignWord.objects.create(sign_id=sign_id, word=word,wordtype=wordtype,context=context,photo_url=url)
- 
         return JsonResponse({"url" : url})
 
     except Exception as e :
@@ -81,17 +84,20 @@ def get_file_url(request):
 def get_info(request):
     
 
-    token = request.META.get('HTTP_ACCESS', None)
-       
-    if token is None:
-         return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
 
+    token = request.META.get('HTTP_ACCESS', None)
+    
+    if token is None:
+        return JsonResponse({'message': '토큰이 필요합니다'})
+    
     try:
+        
         user_id = get_user_id_from_token(token.split(' ')[1])
+    
     except AuthenticationFailed as e:
-        return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
-    
-    
+
+        return JsonResponse({'message': str(e)})
+
 
     if request.method == 'POST':
         sign_id = request.POST['sign_id']
@@ -112,14 +118,17 @@ import random
 def three_random(request):
 
     token = request.META.get('HTTP_ACCESS', None)
-       
+    
     if token is None:
-         return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
-
+        return JsonResponse({'message': '토큰이 필요합니다'})
+    
     try:
+        
         user_id = get_user_id_from_token(token.split(' ')[1])
+    
     except AuthenticationFailed as e:
-        return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return JsonResponse({'message': str(e)})
     
     
     if request.method == 'POST':
