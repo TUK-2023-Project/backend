@@ -40,7 +40,7 @@ def get_file_url(request):
         token = request.META.get('HTTP_ACCESS', None)
         if token is None:
             return JsonResponse({'message': '토큰이 필요합니다'})
-        user_id = get_user_id_from_token(token)
+        user_id = get_user_id_from_token(token.split(' ')[1])
 
         # except AuthenticationFailed as e:
 
@@ -86,7 +86,7 @@ def get_info(request):
     token = request.META.get('HTTP_ACCESS', None)
     if token is None:
         return JsonResponse({'message': '토큰이 필요합니다'})
-    user_id = get_user_id_from_token(token)
+    user_id = get_user_id_from_token(token.split(' ')[1])
 
 
     if request.method == 'POST':
@@ -110,7 +110,7 @@ def three_random(request):
     token = request.META.get('HTTP_ACCESS', None)
     if token is None:
         return JsonResponse({'message': '토큰이 필요합니다'})
-    user_id = get_user_id_from_token(token)
+    user_id = get_user_id_from_token(token.split(' ')[1])
 
 
     if request.method == 'POST':
