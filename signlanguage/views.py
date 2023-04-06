@@ -116,7 +116,7 @@ def three_random(request):
     if request.method == 'POST':
         wordinput=[]
         word = request.POST['wordtype']
-        date = request.POST.getlist('input[]')
+        date = request.POST.getlist('solvedlist')
 
         #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
         J=['1','2','3','4','5'] #자음
@@ -162,7 +162,8 @@ def three_random(request):
 
         answerone=random.sample(three_word,1)
         answer = SignWord.objects.get(sign_id=answerone[0])
-     
+    ###문제를 다 풀었을 경우 리턴값을 따로 만들자
+    
     return JsonResponse({"questions" : [
         {
         "id":first.sign_id,
