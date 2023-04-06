@@ -11,7 +11,9 @@ import sys
 from .serializers import *
 from rest_framework import status
 from rest_framework.response import Response
-# sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
+from utils import *
+
 # from users import models
 
 # def receive_video(request):
@@ -34,19 +36,15 @@ from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORA
 
 def get_file_url(request):
     try:
-        
+       
         token = request.META.get('HTTP_ACCESS', None)
-       
         if token is None:
-         return JsonResponse({'message': '토큰이 필요합니다'})
-       
-        try:
-         
-            user_id = get_user_id_from_token(token.split(' ')[1])
-       
-        except AuthenticationFailed as e:
+            return JsonResponse({'message': '토큰이 필요합니다'})
+        user_id = get_user_id_from_token(token)
 
-            return JsonResponse({'message': str(e)})
+        # except AuthenticationFailed as e:
+
+        #     return JsonResponse({'message': str(e)})
 
         s3_client = boto3.client(
             's3',
@@ -54,7 +52,7 @@ def get_file_url(request):
             aws_secret_access_key=AWS_SECRET_ACCESS_KEY
         )
         #word = request.data.get['word']
-     
+
         type = "jpg"
         files = request.FILES['files']
         
@@ -86,17 +84,9 @@ def get_info(request):
 
 
     token = request.META.get('HTTP_ACCESS', None)
-    
     if token is None:
         return JsonResponse({'message': '토큰이 필요합니다'})
-    
-    try:
-        
-        user_id = get_user_id_from_token(token.split(' ')[1])
-    
-    except AuthenticationFailed as e:
-
-        return JsonResponse({'message': str(e)})
+    user_id = get_user_id_from_token(token)
 
 
     if request.method == 'POST':
@@ -118,19 +108,11 @@ import random
 def three_random(request):
 
     token = request.META.get('HTTP_ACCESS', None)
-    
     if token is None:
         return JsonResponse({'message': '토큰이 필요합니다'})
-    
-    try:
-        
-        user_id = get_user_id_from_token(token.split(' ')[1])
-    
-    except AuthenticationFailed as e:
+    user_id = get_user_id_from_token(token)
 
-        return JsonResponse({'message': str(e)})
-    
-    
+
     if request.method == 'POST':
         wordinput=[]
         word = request.POST['wordtype']
@@ -162,7 +144,7 @@ def three_random(request):
 
 
         for i in date:
-   
+  
             wordinput.remove(i)
    
 
@@ -174,18 +156,43 @@ def three_random(request):
     
         second = SignWord.objects.get(sign_id=three_word[1])
         secondserialize = Randomserializer(second).data
-
+   
         third = SignWord.objects.get(sign_id=three_word[2])
         thirdserialize = Randomserializer(third).data
 
         answerone=random.sample(three_word,1)
         answer = SignWord.objects.get(sign_id=answerone[0])
-
+     
     return JsonResponse({"questions" : [
-        firstserialize,
-        secondserialize,
-        thirdserialize,
-    
+        {
+        "id":first.sign_id,
+        "word":first.word,
+        "photo_url":first.photo_url
+        },
+              {
+        "id":second.sign_id,
+        "word":second.word,
+        "photo_url":second.photo_url
+        },
+              {
+        "id":third.sign_id,
+        "word":third.word,
+        "photo_url":third.photo_url
+        },
+   
     ],
-    "answer":Answerserializer
+    "answer":{
+        "id":answer.sign_id,
+        "word":answer.word
+    }
     })
+
+
+    # return JsonResponse({"questions" : [
+    #     firstserialize,
+    #     secondserialize,
+    #     thirdserialize,
+
+    # ],
+    # "answer":Answerserializer
+    # })
