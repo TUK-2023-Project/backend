@@ -38,7 +38,14 @@ CORS_ORIGIN_WHITELIST = ['http://localhost:3000','http://localhost:80'
 
 ]
 
+
+CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
+
+CORS_ALLOW_HEADERS = [
+    'access',
+    'Content-Type',
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -86,6 +93,7 @@ ASGI_APPLICATION = 'backend.routing.application'	# backend 는 django 프로젝�
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware', #CorsError
+    
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
