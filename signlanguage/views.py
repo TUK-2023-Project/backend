@@ -34,13 +34,14 @@ from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORA
 날짜:3/30
 """
 
+
 def get_file_url(request):
     try:
-       
-        token = request.META.get('HTTP_ACCESS', None)
-        if token is None:
-            return JsonResponse({'message': '토큰이 필요합니다'})
-        user_id = get_user_id_from_token(token.split(' ')[1])
+    
+        # token = request.META.get('HTTP_ACCESS', None)
+        # if token is None:
+        #     return JsonResponse({'message': '토큰이 필요합니다'})
+        # user_id = get_user_id_from_token(token.split(' ')[1])
 
         # except AuthenticationFailed as e:
 
@@ -59,7 +60,7 @@ def get_file_url(request):
         if request.method == 'POST':
 
             sign_id = request.POST['sign_id']
- 
+
             word = request.POST['word']#ex'기역'
             wordtype = request.POST['wordtype'] 
             context = request.POST['context']
@@ -83,14 +84,20 @@ def get_info(request):
     
 
 
-    token = request.META.get('HTTP_ACCESS', None)
-    if token is None:
-        return JsonResponse({'message': '토큰이 필요합니다'})
-    user_id = get_user_id_from_token(token.split(' ')[1])
+    # token = request.META.get('HTTP_ACCESS', None)
+    # if token is None:
+    #     return JsonResponse({'message': '토큰이 필요합니다'})
+    # user_id = get_user_id_from_token(token.split(' ')[1])
 
 
-    if request.method == 'POST':
-        sign_id = request.POST['sign_id']
+    if request.method == 'GET':
+        sign_id = request.GET.get('sign_id', None)
+        # data   = json.loads(request.body)
+        # sign_id = data.get('sign_id', None)
+
+
+
+    # sign_id = request.POST['sign_id']
         a=SignWord.objects.get(sign_id = sign_id)
         userserialize = Signserializer(a).data
         return JsonResponse({"sign_language_info"  :userserialize
@@ -105,95 +112,102 @@ def get_info(request):
 
 
 import random
-def three_random(request):
+class SignView(APIView):
+    def get(self,request):
 
-    token = request.META.get('HTTP_ACCESS', None)
-    if token is None:
-        return JsonResponse({'message': '토큰이 필요합니다'})
-    user_id = get_user_id_from_token(token.split(' ')[1])
+        # token = request.META.get('HTTP_ACCESS', None)
+        # if token is None:
+        #     return JsonResponse({'message': '토큰이 필요합니다'})
+        # user_id = get_user_id_from_token(token.split(' ')[1])
 
 
-    if request.method == 'POST':
-        wordinput=[]
-        word = request.POST['wordtype']
-        date = request.POST.getlist('solvedlist')
+        # if request.method == 'GET':
+            wordinput=[]
+            category_id = request.GET.get('category_id', None)
+            date=self.request.query_params.get('solvedlist')
+            date=date.split(',')
+            # date=json.dumps(date)
+          #  date = request.query_params.getlist('solvedlist')
+           # date=self.context['request'].query_params.get('solvedlist', None)
+            # word = request.POST['wordtype']
+            # date = request.POST.getlist('solvedlist')
 
-        #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
-        J=['1','2','3','4','5'] #자음
-        M=['1','2','3','4','5'] #모음
-        A=['1','2','3','4','5'] #알파벳
+            #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
+            J=['1','2','3','4','5','6','7'] #자음
+            M=['1','2','3','4','5'] #모음
+            A=['1','2','3','4','5'] #알파벳
 
-        # 추후 db에서 꺼내서 파싱해서 배열에 넣기
-      #  J=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19'] #자음
-      #  M=['20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40'] #모음
-      #  A=['41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66']#알파벳
+            # 추후 db에서 꺼내서 파싱해서 배열에 넣기
+        #  J=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19'] #자음
+        #  M=['20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40'] #모음
+        #  A=['41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66']#알파벳
 
-        if(word=='1'): #추후enum으로 변경예정
+            if(category_id=='1'): #추후enum으로 변경예정
+        
+                wordinput=J
+                print(wordinput)
+            elif(category_id=='2'):
+                wordinput=M
+                print(wordinput)
+
+            elif(category_id=='3'):
+                wordinput=A
+                print(wordinput)
+            else:
+                print("else")
+
+
+            for i in date:
+                print(i)
+                wordinput.remove(i)
     
-            wordinput=J
-            print(wordinput)
-        elif(word=='2'):
-            wordinput=M
-            print(wordinput)
 
-        elif(word=='3'):
-            wordinput=A
-            print(wordinput)
-        else:
-            print("else")
+            three_word=random.sample(wordinput,3)
 
 
-        for i in date:
-  
-            wordinput.remove(i)
-   
-
-        three_word=random.sample(wordinput,3)
-
-
-        first = SignWord.objects.get(sign_id=three_word[0])
-        firstserialize = Randomserializer(first).data
+            first = SignWord.objects.get(sign_id=three_word[0])
+            firstserialize = Randomserializer(first).data
+        
+            second = SignWord.objects.get(sign_id=three_word[1])
+            secondserialize = Randomserializer(second).data
     
-        second = SignWord.objects.get(sign_id=three_word[1])
-        secondserialize = Randomserializer(second).data
-   
-        third = SignWord.objects.get(sign_id=three_word[2])
-        thirdserialize = Randomserializer(third).data
+            third = SignWord.objects.get(sign_id=three_word[2])
+            thirdserialize = Randomserializer(third).data
 
-        answerone=random.sample(three_word,1)
-        answer = SignWord.objects.get(sign_id=answerone[0])
-    ###문제를 다 풀었을 경우 리턴값을 따로 만들자
-    
-    return JsonResponse({"questions" : [
-        {
-        "id":first.sign_id,
-        "word":first.word,
-        "photo_url":first.photo_url
-        },
-              {
-        "id":second.sign_id,
-        "word":second.word,
-        "photo_url":second.photo_url
-        },
-              {
-        "id":third.sign_id,
-        "word":third.word,
-        "photo_url":third.photo_url
-        },
-   
-    ],
-    "answer":{
-        "id":answer.sign_id,
-        "word":answer.word
-    }
-    })
+            answerone=random.sample(three_word,1)
+            answer = SignWord.objects.get(sign_id=answerone[0])
+        ###문제를 다 풀었을 경우 리턴값을 따로 만들자
+        
+            return JsonResponse({"questions" : [
+                {
+                "id":first.sign_id,
+                "word":first.word,
+                "photo_url":first.photo_url
+                },
+                    {
+                "id":second.sign_id,
+                "word":second.word,
+                "photo_url":second.photo_url
+                },
+                    {
+                "id":third.sign_id,
+                "word":third.word,
+                "photo_url":third.photo_url
+                },
+        
+            ],
+            "answer":{
+                "id":answer.sign_id,
+                "word":answer.word
+            }
+            })
 
 
-    # return JsonResponse({"questions" : [
-    #     firstserialize,
-    #     secondserialize,
-    #     thirdserialize,
+        # return JsonResponse({"questions" : [
+        #     firstserialize,
+        #     secondserialize,
+        #     thirdserialize,
 
-    # ],
-    # "answer":Answerserializer
-    # })
+        # ],
+        # "answer":Answerserializer
+        # })

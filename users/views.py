@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import *
-
+import json
 import bcrypt
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -23,7 +23,9 @@ class RegisterView(APIView):
 def DuplicateCheck(request):
 
     if request.method == 'POST':
-        email = request.POST['email']
+        # email = request.POST.get['email']
+        data   = json.loads(request.body)
+        email = data.get('email', None)
         #email=UserData.objects.get(email = email)
         email=UserData.objects.filter(email = email).first()
    

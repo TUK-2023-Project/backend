@@ -200,3 +200,13 @@ AWS_STORAGE_BUCKET_NAME = 'suquiz2023'
 AWS_ACCESS_KEY_ID=env.str("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY=env.str("AWS_SECRET_ACCESS_KEY")
 
+
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+# Application definition
+
+CORS_ALLOW_HEADERS = [
+    'access',
+    'Content-Type',
+]
