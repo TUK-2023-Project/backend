@@ -131,7 +131,7 @@ class SignView(APIView):
             #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
    
        
-            id_list=SignWord.objects.filter(wordtype=1).values("sign_id")
+            id_list=SignWord.objects.filter(wordtype=category_id).values("sign_id")
             count = id_list.count()
       
         
