@@ -121,50 +121,38 @@ class SignView(APIView):
         # user_id = get_user_id_from_token(token.split(' ')[1])
 
 
-        # if request.method == 'GET':
+
             wordinput=[]
             category_id = request.GET.get('category_id', None)
             date=self.request.query_params.get('solvedlist')
             date=date.split(',')
-            # date=json.dumps(date)
-          #  date = request.query_params.getlist('solvedlist')
-           # date=self.context['request'].query_params.get('solvedlist', None)
-            # word = request.POST['wordtype']
-            # date = request.POST.getlist('solvedlist')
+
 
             #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
-            J=['1','2','3','4','5','6','7'] #자음
-            M=['1','2','3','4','5'] #모음
-            A=['1','2','3','4','5'] #알파벳
-
-            # 추후 db에서 꺼내서 파싱해서 배열에 넣기
-        #  J=['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19'] #자음
-        #  M=['20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40'] #모음
-        #  A=['41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66']#알파벳
-
-            if(category_id=='1'): #추후enum으로 변경예정
+   
+       
+            id_list=SignWord.objects.filter(wordtype=1).values("sign_id")
+            count = id_list.count()
+      
         
-                wordinput=J
-                print(wordinput)
-            elif(category_id=='2'):
-                wordinput=M
-                print(wordinput)
+            for i in range(count):
+               
+                wordinput.append( str(id_list[i]["sign_id"]))
 
-            elif(category_id=='3'):
-                wordinput=A
-                print(wordinput)
-            else:
-                print("else")
-
-
-            for i in date:
-                print(i)
-                wordinput.remove(i)
+       
+            print(wordinput)
+            print(date)
+            if(date[0]!="0"):
     
+                
+                for i in date:
+                    print(i)
+                    wordinput.remove(i)
+        
 
             three_word=random.sample(wordinput,3)
 
-
+          
             first = SignWord.objects.get(sign_id=three_word[0])
             firstserialize = Randomserializer(first).data
         
