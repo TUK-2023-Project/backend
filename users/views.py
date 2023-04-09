@@ -34,3 +34,18 @@ def DuplicateCheck(request):
 
         else:
             return JsonResponse({"status":200})
+
+def NameCheck(request):
+
+    if request.method == 'POST':
+        # email = request.POST.get['email']
+        data   = json.loads(request.body)
+        name = data.get('name', None)
+        #email=UserData.objects.get(email = email)
+        name=UserData.objects.filter(name = name).first()
+   
+        if name:
+             return JsonResponse({"status":400})
+
+        else:
+            return JsonResponse({"status":200})

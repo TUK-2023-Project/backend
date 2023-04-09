@@ -10,5 +10,6 @@ urlpatterns = [
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', RegisterView.as_view(), name="sign_up"),
     path('emailcheck/',  views.DuplicateCheck, name="emailcheck"),
+    path('namecheck/',  views.NameCheck, name="namecheck"),
     
 ]
