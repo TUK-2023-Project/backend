@@ -34,7 +34,7 @@ class RankView(APIView):
         
         score = request.data.get('score')
 
-        if not user_id or not score:
+        if not user_id or score is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         user = User.objects.filter(id=user_id).first()
