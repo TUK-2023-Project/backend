@@ -8,6 +8,7 @@ from users.models import UserData
 from itertools import groupby
 from rest_framework.exceptions import AuthenticationFailed
 from utils import get_user_id_from_token
+from django.db.models import IntegerField
 
 User = get_user_model()
 
@@ -78,3 +79,28 @@ class RankView(APIView):
             rank += len(group)
 
         return Response(response_data[:10], status=status.HTTP_200_OK)
+
+class UserRankView(APIView):
+    """
+    이름 : 정태원
+    내용 : 토큰으로부터 입력받은 특정 사용자의 랭킹정보를 return해주는 코드입니다
+    날짜 : 4/10
+    """
+    def get(self, request):
+        token = request.META.get('HTTP_ACCESS', None)
+        if token is None:
+            return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            user_id = get_user_id_from_token(token.split(' ')[1])
+        except AuthenticationFailed as e:
+            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        user_rank = Rank.objects.filter(user_id=user_id).first()
+        if not user_rank:
+            return Response({'message': '해당 유저의 랭킹 정보가 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+
+        ranks = Rank.objects.filter(score__gte=user_rank.score)
+        rank = ranks.count()
+
+        return Response({'rank': rank}, status=status.HTTP_200_OK)
