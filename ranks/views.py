@@ -45,7 +45,7 @@ class RankView(APIView):
         if not rank:
             rank = Rank(user_id=user, score=0)
 
-        if score > rank.score or rank.score is None:
+        if score >= rank.score or rank.score is None:
             rank.score = score
             rank.save()
 
