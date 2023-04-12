@@ -87,20 +87,20 @@ class UserRankView(APIView):
     날짜 : 4/10
     """
     def get(self, request):
-        token = request.META.get('HTTP_ACCESS', None)
-        if token is None:
-            return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+            token = request.META.get('HTTP_ACCESS', None)
+            if token is None:
+                return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
 
-        try:
-            user_id = get_user_id_from_token(token.split(' ')[1])
-        except AuthenticationFailed as e:
-            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+            try:
+                user_id = get_user_id_from_token(token.split(' ')[1])
+            except AuthenticationFailed as e:
+                return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
-        user_rank = Rank.objects.filter(user_id=user_id).first()
-        if not user_rank:
-            return Response({'message': '해당 유저의 랭킹 정보가 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+            user_rank = Rank.objects.filter(user_id=user_id).first()
+            if not user_rank:
+                return Response({'message': '해당 유저의 랭킹 정보가 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
 
-        ranks = Rank.objects.filter(score__gte=user_rank.score)
-        rank = ranks.count()
+            ranks = Rank.objects.filter(score__gt=user_rank.score)
+            rank = ranks.count() + 1
 
-        return Response({'rank': rank}, status=status.HTTP_200_OK)
+            return Response({'rank': rank}, status=status.HTTP_200_OK)
