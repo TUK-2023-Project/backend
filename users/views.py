@@ -30,8 +30,7 @@ def DuplicateCheck(request):
             email=UserData.objects.filter(email = email).first()
     
             if email:
-                return JsonResponse(FAIL)
-                
+                return JsonResponse(NOEMAIL)
 
             else:
                 return JsonResponse(SUCCESS)
@@ -49,7 +48,7 @@ def NameCheck(request):
             name=UserData.objects.filter(name = name).first()
     
             if name:
-                return JsonResponse(FAIL)
+                return JsonResponse(NONAME)
 
             else:
                 return JsonResponse(SUCCESS)
@@ -63,10 +62,7 @@ from .serializers import CustomTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 class CustomTokenObtainPairView(TokenObtainPairView):
     # Replace the serializer with your custom
-    try:
-   
+
         serializer_class = CustomTokenObtainPairSerializer
-    except Exception as e :
-            return JsonResponse({"error":str(e)})
    
 

@@ -10,6 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from utils import get_user_id_from_token
 from django.db.models import IntegerField
 from statuscode import *
+import jwt
 
 User = get_user_model()
 
@@ -30,8 +31,15 @@ class RankView(APIView):
 
         try:
             user_id = get_user_id_from_token(token.split(' ')[1])
-        except AuthenticationFailed as e:
-            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        except jwt.exceptions.ExpiredSignatureError:
+                return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
+
+        except jwt.exceptions.DecodeError:
+                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+
+        # except AuthenticationFailed as e:
+        #     return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
         
         score = request.data.get('score')
 
@@ -94,8 +102,12 @@ class UserRankView(APIView):
 
             try:
                 user_id = get_user_id_from_token(token.split(' ')[1])
-            except AuthenticationFailed as e:
-                return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+            except jwt.exceptions.ExpiredSignatureError:
+                return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
+
+            except jwt.exceptions.DecodeError:
+                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
 
             user_rank = Rank.objects.filter(user_id=user_id).first()
             if not user_rank:

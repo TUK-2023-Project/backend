@@ -2,6 +2,7 @@ import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
 from users.models import *
+from statuscode import *
 
 """
 이름 : 정태원
@@ -15,12 +16,17 @@ def get_user_id_from_token(token):
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
 
+    # except jwt.exceptions.ExpiredSignatureError:
+    #     raise AuthenticationFailed1(TOKEN_EXPIRE)
+
+    # except jwt.exceptions.DecodeError:
+    #     raise AuthenticationFailed2(TOKEN_VAILD)
+
     except jwt.exceptions.ExpiredSignatureError:
+        raise jwt.exceptions.ExpiredSignatureError(TOKEN_EXPIRE)
 
-        raise AuthenticationFailed('토큰이 만료되었습니다')
     except jwt.exceptions.DecodeError:
-
-        raise AuthenticationFailed('토큰이 유효하지 않습니다')
+        raise jwt.exceptions.DecodeError(TOKEN_VAILD)
     user_id = decoded_token['user_id']
  
     user = UserData.objects.filter(id=user_id, is_deleted=False).first()
