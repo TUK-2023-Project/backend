@@ -71,8 +71,7 @@ def get_file_url(request):
         return JsonResponse({"url" : url})
 
     except Exception as e :
-            print(e)
-            return JsonResponse({"ERROR" : "e.message"})
+            return JsonResponse({"error":str(e)})
 
 """
 이름: 박수연
@@ -81,28 +80,31 @@ def get_file_url(request):
 """
 
 def get_info(request):
-    
-
-
+    try:    
+            
     # token = request.META.get('HTTP_ACCESS', None)
     # if token is None:
-    #     return JsonResponse({'message': '토큰이 필요합니다'})
+    #     return JsonResponse(TOKEN_ERROR)
     # user_id = get_user_id_from_token(token.split(' ')[1])
 
+        if request.method == 'GET':
+            sign_id = request.GET.get('sign_id', None)
+            # data   = json.loads(request.body)
+            # sign_id = data.get('sign_id', None)
 
-    if request.method == 'GET':
-        sign_id = request.GET.get('sign_id', None)
-        # data   = json.loads(request.body)
-        # sign_id = data.get('sign_id', None)
+        # sign_id = request.POST['sign_id']
+            a=SignWord.objects.get(sign_id = sign_id)
+            userserialize = Signserializer(a).data
+            return JsonResponse({"sign_language_info"  :userserialize
+            
+            }     
+              )
 
+    except Exception as e :
+        return JsonResponse({"error":str(e)})
+    
+    
 
-
-    # sign_id = request.POST['sign_id']
-        a=SignWord.objects.get(sign_id = sign_id)
-        userserialize = Signserializer(a).data
-        return JsonResponse({"sign_language_info"  :userserialize
-        
-        }       )
 
 """
 이름: 박수연
@@ -121,7 +123,7 @@ class SignView(APIView):
         # user_id = get_user_id_from_token(token.split(' ')[1])
 
 
-
+        try:
             wordinput=[]
             category_id = request.GET.get('category_id', None)
             date=self.request.query_params.get('solvedlist')
@@ -189,6 +191,8 @@ class SignView(APIView):
                 "word":answer.word
             }
             })
+        except Exception as e :
+            return JsonResponse({"error":str(e)})
 
 
         # return JsonResponse({"questions" : [
