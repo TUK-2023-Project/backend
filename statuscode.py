@@ -7,7 +7,7 @@ NONAME={'message':"이름이 이미 존재합니다.","CODE":"002"}
 TOKEN_EXPIRE={"message":"토큰이 만료되었습니다.","CODE":"103"}
 TOKEN_VAILD={"message":'토큰이 유효하지 않습니다',"CODE":"104"}
 VAILDPASSWORD={"message":"비밀번호 없습니다.","CODE":"003"}
-VAILDEMAIL={"message":"이메일 없습니다.","stats":"004"}
+VAILDEMAIL={"message":"이메일 없습니다.","CODE":"004"}
 
 # 0:User
 # 1:signlanguage
