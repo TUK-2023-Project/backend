@@ -9,6 +9,8 @@ from itertools import groupby
 from rest_framework.exceptions import AuthenticationFailed
 from utils import get_user_id_from_token
 from django.db.models import IntegerField
+from statuscode import *
+import jwt
 
 User = get_user_model()
 
@@ -25,12 +27,19 @@ class RankView(APIView):
         token = request.META.get('HTTP_ACCESS', None)
        
         if token is None:
-         return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+         return Response(TOKEN_ERROR, status=status.HTTP_404_NOT_FOUND)
 
         try:
             user_id = get_user_id_from_token(token.split(' ')[1])
-        except AuthenticationFailed as e:
-            return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        except jwt.exceptions.ExpiredSignatureError:
+                return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
+
+        except jwt.exceptions.DecodeError:
+                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+
+        # except AuthenticationFailed as e:
+        #     return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
         
         score = request.data.get('score')
 
@@ -39,7 +48,7 @@ class RankView(APIView):
 
         user = User.objects.filter(id=user_id).first()
         if not user:
-            return Response({'message': '존재하지 않는 유저 입니다'}, status=status.HTTP_404_NOT_FOUND)
+            return Response(NO_USER, status=status.HTTP_404_NOT_FOUND)
 
         rank = Rank.objects.filter(user_id=user.id).first()
         if not rank:
@@ -89,16 +98,20 @@ class UserRankView(APIView):
     def get(self, request):
             token = request.META.get('HTTP_ACCESS', None)
             if token is None:
-                return Response({'message': '토큰이 필요합니다'}, status=status.HTTP_404_NOT_FOUND)
+                return Response(TOKEN_ERROR, status=status.HTTP_404_NOT_FOUND)
 
             try:
                 user_id = get_user_id_from_token(token.split(' ')[1])
-            except AuthenticationFailed as e:
-                return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+
+            except jwt.exceptions.ExpiredSignatureError:
+                return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
+
+            except jwt.exceptions.DecodeError:
+                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
 
             user_rank = Rank.objects.filter(user_id=user_id).first()
             if not user_rank:
-                return Response({'message': '해당 유저의 랭킹 정보가 없습니다.'}, status=status.HTTP_404_NOT_FOUND)
+                return Response(NO_USER_INFO, status=status.HTTP_404_NOT_FOUND)
 
             ranks = Rank.objects.filter(score__gt=user_rank.score)
             rank = ranks.count() + 1

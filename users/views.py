@@ -11,7 +11,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from .serializers import UserSerializer
 from rest_framework.response import Response
-
+from statuscode import *
 # view for registering users
 class RegisterView(APIView):
     def post(self, request):
@@ -21,31 +21,48 @@ class RegisterView(APIView):
         return Response(serializer.data)
 
 def DuplicateCheck(request):
+    try:
+        if request.method == 'POST':
+            # email = request.POST.get['email']
+            data   = json.loads(request.body)
+            email = data.get('email', None)
+            #email=UserData.objects.get(email = email)
+            email=UserData.objects.filter(email = email).first()
+    
+            if email:
+                return JsonResponse(NOEMAIL)
 
-    if request.method == 'POST':
-        # email = request.POST.get['email']
-        data   = json.loads(request.body)
-        email = data.get('email', None)
-        #email=UserData.objects.get(email = email)
-        email=UserData.objects.filter(email = email).first()
-   
-        if email:
-             return JsonResponse({"status":400})
+            else:
+                return JsonResponse(SUCCESS)
 
-        else:
-            return JsonResponse({"status":200})
+    except Exception as e :
+            return JsonResponse({"error":str(e)})
 
 def NameCheck(request):
+    try:
+        if request.method == 'POST':
+            # email = request.POST.get['email']
+            data   = json.loads(request.body)
+            name = data.get('name', None)
+            #email=UserData.objects.get(email = email)
+            name=UserData.objects.filter(name = name).first()
+    
+            if name:
+                return JsonResponse(NONAME)
 
-    if request.method == 'POST':
-        # email = request.POST.get['email']
-        data   = json.loads(request.body)
-        name = data.get('name', None)
-        #email=UserData.objects.get(email = email)
-        name=UserData.objects.filter(name = name).first()
+            else:
+                return JsonResponse(SUCCESS)
+
+    except Exception as e :
+            return JsonResponse({"error":str(e)})
+
+
+from .serializers import CustomTokenObtainPairSerializer
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+class CustomTokenObtainPairView(TokenObtainPairView):
+    # Replace the serializer with your custom
+
+        serializer_class = CustomTokenObtainPairSerializer
    
-        if name:
-             return JsonResponse({"status":400})
 
-        else:
-            return JsonResponse({"status":200})
