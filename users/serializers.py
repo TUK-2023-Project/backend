@@ -3,6 +3,7 @@ from .models import UserData
 import json
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.http import JsonResponse
+from statuscode import *
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -32,7 +33,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         if name:
             if not name.check_password(od2['password']) :
 
-                data1={"message":"비밀번호 없습니다.","stats":400}
+                data1=VAILDPASSWORD
                 return data1
 
             else:
@@ -40,7 +41,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
       
         else:
             
-            data1= {"message":"이메일 없습니다.","stats":400}
+            data1= VAILDEMAIL
             return data1
 
         data = super(CustomTokenObtainPairSerializer, self).validate(attrs)
