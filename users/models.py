@@ -37,13 +37,13 @@ class UserData(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
     is_deleted=models.BooleanField(default=False)
-    last_login=None
-    last_name=None
-    first_name=None
-    date_joined=None
-    is_admin=None
-    is_staff=None
-    is_superuser=None
+    # last_login=None
+    # last_name=None
+    # first_name=None
+    # date_joined=None
+    # is_admin=None
+    # is_staff=None
+    # is_superuser=None
     # is_active = models.BooleanField(default=True)
     # is_staff = models.BooleanField(default=False)
     # is_superuser = models.BooleanField(default=False)
