@@ -1,15 +1,29 @@
 import cv2
 import numpy as np
 
+CATEGORY_CONSONANT = 1
+CATEGORY_VOWEL = 2
 
-def predict_most_probable_gesture(dataList):
+knn_vowel = cv2.ml.KNearest_load('./AI/model/knn_model_vowel_v2.yml')
+knn_consonant = cv2.ml.KNearest_load('./AI/model/knn_model_consonant_v2.yml')
+
+gesture = {
+    0:'ㄱ', 1:'ㄴ', 2:'ㄷ' , 3:'ㄹ' , 4:'ㅁ' , 5:'ㅂ', 6:'ㅅ', 7:'ㅇ', 8:'ㅈ', 9:'ㅊ', 10:'ㅋ', 11:'ㅌ', 12:'ㅍ',
+   13:'ㅎ', 14:'ㅏ', 15:'ㅑ', 16:'ㅓ', 17:'ㅕ', 18:'ㅗ', 19:'ㅛ', 20:'ㅜ', 21:'ㅠ', 22:'ㅡ', 23:'ㅣ', 24:'ㅐ', 25:'ㅒ', 26:'ㅔ', 27:'ㅖ',
+   28:'ㅚ', 29:'ㅟ', 30:'ㅢ'
+}
+
+
+
+
+def predict_most_probable_gesture(dataList, model):
     freq = {key: 0 for key in gesture}
     for list in dataList:
-        freq[predict_one_gesture(list)] += 1
+        freq[predict_one_gesture(list,model)] += 1
 
     return max(freq, key=freq.get)
 
-def predict_one_gesture(data):
+def predict_one_gesture(data,model):
     landmarks = data['landmarks']
     joint = np.zeros((21, 3))
     for i in range(len(landmarks)):
@@ -32,22 +46,20 @@ def predict_one_gesture(data):
 
   
     data = np.array([angle], dtype=np.float32)
-    _, results, _, _ = knn.findNearest(data, 3)
+    _, results, _, _ = model.findNearest(data, 3)
     idx = int(results[0][0])
     return idx
 
 
-gesture = {
-    0:'ㄱ', 1:'ㄴ', 2:'ㄷ' , 3:'ㄹ' , 4:'ㅁ' , 5:'ㅂ', 6:'ㅅ', 7:'ㅇ', 8:'ㅈ', 9:'ㅊ', 10:'ㅋ', 11:'ㅌ', 12:'ㅍ',
-   13:'ㅎ', 14:'ㅏ', 15:'ㅑ', 16:'ㅓ', 17:'ㅕ', 18:'ㅗ', 19:'ㅛ', 20:'ㅜ', 21:'ㅠ', 22:'ㅡ', 23:'ㅣ', 24:'ㅐ', 25:'ㅒ', 26:'ㅔ', 27:'ㅖ',
-   28:'ㅚ', 29:'ㅟ', 30:'ㅢ'
-}
-
-knn = cv2.ml.KNearest_load('./AI/model/knn_model_v1.yml')
-
-
-def run(data):
-    if(data == []):
+def run(data, category_num):
+    if data == []:
         return None
- 
-    return gesture[predict_most_probable_gesture(data)]
+    if category_num == CATEGORY_CONSONANT:
+        knn = knn_consonant
+    elif category_num == CATEGORY_VOWEL:
+        knn = knn_vowel
+
+    else:
+        raise ValueError("Invalid categoryNum: {}".format(category_num))
+
+    return gesture[predict_most_probable_gesture(data, knn)]
