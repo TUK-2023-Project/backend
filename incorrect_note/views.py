@@ -26,7 +26,7 @@ def add_note(request):
             return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
 
         except jwt.exceptions.DecodeError:
-            return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
         
         sign_id = request.GET.get('sign_id', None)
         id=UserData.objects.get(id=user_id)
@@ -36,11 +36,11 @@ def add_note(request):
         else:
             raise Exception('signword에 없는 값입니다.')
        
-        if(Incorret.objects.filter(user_id=id, sign_id=sign_id)):
-            Incorret.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=False)
+        if(Incorrect.objects.filter(user_id=id, sign_id=sign_id)):
+            Incorrect.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=False)
         
         else:
-            Incorret.objects.create(user_id=id, sign_id=sign_id)
+            Incorrect.objects.create(user_id=id, sign_id=sign_id)
         return Response(SUCCESS,status=status.HTTP_200_OK)
     
     except Exception as e:                            
@@ -62,13 +62,13 @@ def delete_note(request):
             return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
 
         except jwt.exceptions.DecodeError:
-            return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
         
         try:
             sign_id = request.GET.get('sign_id', None)
             id=UserData.objects.get(id=user_id)
             sign_id=SignWord.objects.get(sign_id=sign_id)
-            Incorret.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=True)
+            Incorrect.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=True)
             return Response(SUCCESS,status=status.HTTP_200_OK)
         except Exception as e:                           
             print(e) 
@@ -87,26 +87,20 @@ def show_list_note(request):
             return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
 
         except jwt.exceptions.DecodeError:
-            return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+            return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
+        
         try:
-            response_data = []
 
             id=UserData.objects.get(id=user_id)
-            sign_list = Incorret.objects.filter(user_id=id,is_deleted=False).values("sign_id")
+            sign_list = Incorrect.objects.filter(user_id=id,is_deleted=False).values("sign_id")
+
+            response_data = []
 
             for i in sign_list:
-                string=str(i["sign_id"])
-                response_data.append(string)
-
-            response_data2 = []
-
-            for i in response_data:
-                count=0
-                a=SignWord.objects.get(sign_id=i[count])
-                count=count+1
-                response_data2.append(Listserializer(a).data)
+                a=SignWord.objects.get(sign_id=i["sign_id"])
+                response_data.append(Listserializer(a).data)
             
-            return JsonResponse({'data_list':response_data2})
+            return JsonResponse({'data_list':response_data})
 
         except Exception as e:                         
             print(e)

@@ -13,18 +13,6 @@ from rest_framework import status
 from rest_framework.response import Response
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))))
 from utils import *
-
-# from users import models
-
-# def receive_video(request):
-#     if request.method == "POST":
-#         video_data = request.body
-#         # Do some processing with the video data
-#         cumulative_video_size = ...
-#         # ...
-#         return JsonResponse({"cumulative_video_size": cumulative_video_size})
-#     return JsonResponse({"error": "Invalid request method"})
-
 import boto3
 from backend.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME
 

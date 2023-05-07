@@ -7,7 +7,7 @@ from signlanguage.models import *
 
 # User = get_user_model()
 
-class Incorret(models.Model):
+class Incorrect(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(UserData, on_delete=models.CASCADE, related_name='incorrect', db_column='user_id')
     sign_id = models.ForeignKey(SignWord, on_delete=models.CASCADE, related_name='incorrect', db_column='sign_id')

@@ -22,6 +22,7 @@ class RankView(APIView):
     내용 : score정보를 DB에 저장합니다.
     날짜 : 3/30
     """
+    
 
     def post(self, request):
         token = request.META.get('HTTP_ACCESS', None)
@@ -36,7 +37,7 @@ class RankView(APIView):
                 return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
 
         except jwt.exceptions.DecodeError:
-                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
 
         # except AuthenticationFailed as e:
         #     return Response({'message': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
@@ -107,7 +108,7 @@ class UserRankView(APIView):
                 return Response(TOKEN_EXPIRE, status=status.HTTP_401_UNAUTHORIZED)
 
             except jwt.exceptions.DecodeError:
-                return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
+                return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
 
             user_rank = Rank.objects.filter(user_id=user_id).first()
             if not user_rank:
