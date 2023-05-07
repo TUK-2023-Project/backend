@@ -7,9 +7,9 @@ from django.http import JsonResponse
 import jwt
 from utils import *
 from .serializers import *
-# Create your views here.
 from .models import *
 from statuscode import *
+
 
 @api_view(['GET'])
 def add_note(request):
@@ -29,12 +29,15 @@ def add_note(request):
             return Response(TOKEN_VAILD, status=status.HTTP_401_UNAUTHORIZED)
         
         sign_id = request.GET.get('sign_id', None)
-     
         id=UserData.objects.get(id=user_id)
         sign_id=SignWord.objects.get(sign_id=sign_id)
-
-        Incorret.objects.create(user_id=id, sign_id=sign_id)
-
+       
+        #print(Incorret.objects.get(user_id=id, sign_id=sign_id))
+        if(Incorret.objects.filter(user_id=id, sign_id=sign_id)):
+            Incorret.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=False)
+        
+        else:
+            Incorret.objects.create(user_id=id, sign_id=sign_id)
         return Response(SUCCESS,status=status.HTTP_200_OK)
 
         
@@ -79,7 +82,7 @@ def show_list_note(request):
         response_data = []
 
         id=UserData.objects.get(id=user_id)
-        sign_list = Incorret.objects.filter(user_id=id).values("sign_id")
+        sign_list = Incorret.objects.filter(user_id=id,is_deleted=False).values("sign_id")
 
         for i in sign_list:
             string=str(i["sign_id"])
