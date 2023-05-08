@@ -117,32 +117,38 @@ class SignView(APIView):
             date=self.request.query_params.get('solvedlist')
             date=date.split(',')
 
-
-            #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함 
-   
-       
+        
+            #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함       
             id_list=SignWord.objects.filter(wordtype=category_id).values("sign_id")
             count = id_list.count()
+            print(date)
       
-        
             for i in range(count):
                
                 wordinput.append( str(id_list[i]["sign_id"]))
 
-       
-            print(wordinput)
-            print(date)
-            if(date[0]!="0"):
-    
-                
-                for i in date:
-                    print(i)
-                    wordinput.remove(i)
+     
+            wordinputlist = wordinput[:] #wordinputlist에 원본 값 저장
         
+            if(len(wordinput)==len(date)):
+                print("모든 문제 다 풀었습니다")
+                return JsonResponse({"state" : "clear"})
+            print(date)
 
-            three_word=random.sample(wordinput,3)
+            if(date[0]!="0"):
+                for i in date:
+                    wordinput.remove(i) #wordinput에 정답 후보들만 남기기
+            
+            if(len(wordinput)<3):
+                three_word=wordinput[:]
+  
+                for i in random.sample(date,3-len(wordinput)): #맞춘 정답주에서 필요한 만큼만 랜덤값 추출
+                    three_word.append(str(i))
 
-          
+
+            else:
+                three_word=random.sample(wordinput,3)
+
             first = SignWord.objects.get(sign_id=three_word[0])
             firstserialize = Randomserializer(first).data
         
@@ -152,7 +158,7 @@ class SignView(APIView):
             third = SignWord.objects.get(sign_id=three_word[2])
             thirdserialize = Randomserializer(third).data
 
-            answerone=random.sample(three_word,1)
+            answerone=random.sample(wordinput,1)
             answer = SignWord.objects.get(sign_id=answerone[0])
         ###문제를 다 풀었을 경우 리턴값을 따로 만들자
         
