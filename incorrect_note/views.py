@@ -9,8 +9,9 @@ from utils import *
 from .serializers import *
 from .models import *
 from statuscode import *
+import json
 
-@api_view(['GET'])
+@api_view(['POST'])
 def add_note(request):
     # if request.method == 'GET':
     try:
@@ -28,7 +29,10 @@ def add_note(request):
         except jwt.exceptions.DecodeError:
             return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
         
-        sign_id = request.GET.get('sign_id', None)
+
+        data   = json.loads(request.body)
+        sign_id = data.get('sign_id', None)
+        #sign_id = request.GET.get('sign_id', None)
         id=UserData.objects.get(id=user_id)
 
         if(SignWord.objects.filter(sign_id=sign_id)):
@@ -48,7 +52,7 @@ def add_note(request):
 
         
 
-@api_view(['GET'])
+@api_view(['POST'])
 def delete_note(request):
 
         token = request.META.get('HTTP_ACCESS', None)
@@ -65,7 +69,9 @@ def delete_note(request):
             return Response(TOKEN_INVAILD, status=status.HTTP_401_UNAUTHORIZED)
         
         try:
-            sign_id = request.GET.get('sign_id', None)
+            data   = json.loads(request.body)
+            sign_id = data.get('sign_id', None)
+          #  sign_id = request.GET.get('sign_id', None)
             id=UserData.objects.get(id=user_id)
             sign_id=SignWord.objects.get(sign_id=sign_id)
             Incorrect.objects.filter(user_id=id, sign_id=sign_id).update(is_deleted=True)
