@@ -138,11 +138,14 @@ DATABASES = {
     "default": {
         'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.mysql'),
         # 'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'NAME': os.environ.get('SQL_DATABASE', 'eg_db'),
-        # 'USER': os.environ.get('SQL_USER', 'root'), 
-        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', '1234'),
-        'HOST': os.environ.get('SQL_HOST', 'db'),
+        'NAME': os.environ.get('SQL_DATABASE', 'suquiz'),
+        'USER': os.environ.get('SQL_USER', 'secret'), 
+        'PASSWORD': os.environ.get('MYSQL_ROOT_PASSWORD', 'secret'),
+        'HOST': os.environ.get('SQL_HOST', 'secret'),
         'PORT': os.environ.get('SQL_PORT', '3306'),
+        # 'OPTIONS':{
+        #     'init_command':'SET sql_mode="STATIC_TRANS_TABLES"'
+        # }
     }
 }
 AUTH_USER_MODEL = 'users.UserData'
@@ -200,7 +203,6 @@ AWS_STORAGE_BUCKET_NAME = 'suquiz2023'
 
 AWS_ACCESS_KEY_ID=env.str("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY=env.str("AWS_SECRET_ACCESS_KEY")
-
 
 CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
