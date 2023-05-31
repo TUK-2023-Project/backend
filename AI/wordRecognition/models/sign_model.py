@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from models.hand_model import HandModel
+from AI.wordRecognition.models.hand_model import HandModel
 
 
 class SignModel(object):

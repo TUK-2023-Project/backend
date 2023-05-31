@@ -1,7 +1,7 @@
 import pandas as pd
 from fastdtw import fastdtw
 import numpy as np
-from models.sign_model import SignModel
+from AI.wordRecognition.models.sign_model import SignModel
 
 
 def dtw_distances(recorded_sign: SignModel, reference_signs: pd.DataFrame):

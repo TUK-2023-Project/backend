@@ -3,8 +3,8 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from models.sign_model import SignModel
-from utils.landmark_utils import save_landmarks_from_video, load_array
+from AI.wordRecognition.models.sign_model import SignModel
+from AI.wordRecognition.utils.landmark_utils import save_landmarks_from_video, load_array
 
 
 def create_dataset():

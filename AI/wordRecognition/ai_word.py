@@ -1,5 +1,5 @@
-from utils.dataset_utils import load_dataset, load_reference_signs , create_dataset
-from sign_recorder import SignRecorder
+from AI.wordRecognition.utils.dataset_utils import load_dataset, load_reference_signs , create_dataset
+from AI.wordRecognition.sign_recorder import SignRecorder
 
 
 
@@ -29,7 +29,7 @@ def detect_word(data):
     print("예측값 : ")
     print(sign_detected)
 
-    return sign_detected
+    return "상수테스트"
 
 
     # 0. 결과 값을 return할 수 있는 String으로 추출해보기 (O)

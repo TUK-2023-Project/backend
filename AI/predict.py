@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from wordRecognition.main import detect_word
+from AI.wordRecognition.ai_word import detect_word
 
 CATEGORY_CONSONANT = 1
 CATEGORY_VOWEL = 2
@@ -61,8 +61,8 @@ def run(data, category_num):
     elif category_num == CATEGORY_VOWEL:
         knn = knn_vowel
     elif category_num == CATEGORY_WORD:
-        print("isHere?")
-        return "AAAA"
+   
+        return detect_word([])
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))

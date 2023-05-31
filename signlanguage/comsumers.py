@@ -15,7 +15,7 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
             result = predict.run([], category_id)
             print(result)
             await self.send(text_data=json.dumps({
-                'message': "3번"
+                'message': result
             }))
 
         else:

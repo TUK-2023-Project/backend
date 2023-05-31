@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 from collections import Counter
-from utils.dtw import dtw_distances
-from models.sign_model import SignModel
+from AI.wordRecognition.utils.dtw import dtw_distances
+from AI.wordRecognition.models.sign_model import SignModel
 
 
 
