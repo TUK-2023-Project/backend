@@ -26,10 +26,8 @@ def detect_word(data):
 
     sign_detected = sign_recorder.process_results(parsed_front_data)
 
-    print("예측값 : ")
-    print(sign_detected)
 
-    return "상수테스트"
+    return sign_detected
 
 
     # 0. 결과 값을 return할 수 있는 String으로 추출해보기 (O)
