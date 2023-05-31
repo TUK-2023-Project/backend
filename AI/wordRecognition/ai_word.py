@@ -2,18 +2,17 @@ from AI.wordRecognition.utils.dataset_utils import load_dataset, load_reference_
 from AI.wordRecognition.sign_recorder import SignRecorder
 
 
+# videos =  create_dataset() #비디오 기준으로 데이터셋 만들때 사용하는 함수 (주석을 풀어서 실행 후 다시 주석처리할것)  
+# 데이터셋 정보를 가져옴
+videos = load_dataset()
+
+# Create a DataFrame of reference signs (name: str, model: SignModel, distance: int)
+reference_signs = load_reference_signs(videos)
+
+
 
 def detect_word(data):
 
-
-    # videos =  create_dataset() #비디오 기준으로 데이터셋 만들때 사용하는 함수 (주석을 풀어서 실행 후 다시 주석처리할것)
-     
-
-    # 데이터셋 정보를 가져옴 
-    videos = load_dataset()
-
-    # Create a DataFrame of reference signs (name: str, model: SignModel, distance: int)
-    reference_signs = load_reference_signs(videos)
 
     # Object that stores mediapipe results and computes sign similarities
     sign_recorder = SignRecorder(reference_signs)
@@ -28,18 +27,3 @@ def detect_word(data):
 
 
     return sign_detected
-
-
-    # 0. 결과 값을 return할 수 있는 String으로 추출해보기 (O)
-
-    # 1. 일단 더미데이터를 넣어서 결과값이 추출가능한지 수정해보기 (O)
-    
-    # 2. record모드와 상관없이 항상 데이터를 뽑아서 보내지는지 확인해보기 (O)
-    
-    # 3. 프론트에서 보내고 있는 배열값을 해당 함수에서 사용하고있는 방식으로 파싱할 것 (진행중)
-
-    # 4. 동시에 카메라가 아니라 한번의 api호출에 대한 결과 값 return으로 함수처리 수정하기 (O)
-
-    # 5. 웹소켓 연결 및 실제 api연동해보기
-
-    # 6. 영상을 기준으로 모델을 만드는 것 같은데 파일 기준으로 만들 수 있는지 찾아보기 (O)
