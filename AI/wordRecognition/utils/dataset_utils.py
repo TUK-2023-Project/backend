@@ -54,7 +54,7 @@ def load_reference_signs(videos):
         reference_signs["distance"].append(0)
     
     reference_signs = pd.DataFrame(reference_signs, dtype=object)
-    print(
-        f'Dictionary count: {reference_signs[["name", "sign_model"]].groupby(["name"]).count()}'
-    )
+    # print(
+    #     f'Dictionary count: {reference_signs[["name", "sign_model"]].groupby(["name"]).count()}'
+    # )
     return reference_signs
