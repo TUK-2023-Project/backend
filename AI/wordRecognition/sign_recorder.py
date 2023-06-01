@@ -29,10 +29,6 @@ class SignRecorder(object):
         left_hand_list = self.recorded_results["left"]
         right_hand_list = self.recorded_results["right"]
 
-        # print("왼쪽 좌표 추출")
-        # print(left_hand_list)
-        # print("오른쪽 좌표 추출")
-        # print(right_hand_list)
 
 
         recorded_sign = SignModel(left_hand_list, right_hand_list)

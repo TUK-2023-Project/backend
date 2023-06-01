@@ -62,7 +62,7 @@ def run(data, category_num):
         knn = knn_vowel
     elif category_num == CATEGORY_WORD:
    
-        return detect_word([])
+        return detect_word(data)
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))

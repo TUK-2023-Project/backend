@@ -12,8 +12,24 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
         category_id = data.get('categoryId', 1)
 
         if category_id == 3:
-            result = predict.run([], category_id)
-            print(result)
+   
+            parsedData = {'left': [], 'right': []}
+
+            for data in media_pipe:
+                left_list = []
+                right_list = []
+
+                for point in data['left']:
+                    left_list.extend([point['x'], point['y'], point['z']])
+
+                for point in data['right']:
+                    right_list.extend([point['x'], point['y'], point['z']])
+
+                parsedData['left'].append(left_list)
+                parsedData['right'].append(right_list)
+
+            result = predict.run(parsedData, category_id)
+    
             await self.send(text_data=json.dumps({
                 'message': result
             }))
