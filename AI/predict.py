@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
+from AI.wordRecognition.ai_word import detect_word
 
 CATEGORY_CONSONANT = 1
 CATEGORY_VOWEL = 2
+CATEGORY_WORD = 3
 
 knn_vowel = cv2.ml.KNearest_load('./AI/model/knn_model_vowel_v2.yml')
 knn_consonant = cv2.ml.KNearest_load('./AI/model/knn_model_consonant_v2.yml')
@@ -52,12 +54,15 @@ def predict_one_gesture(data,model):
 
 
 def run(data, category_num):
-    if data == []:
-        return None
+    # if data == []:
+    #     return None
     if category_num == CATEGORY_CONSONANT:
         knn = knn_consonant
     elif category_num == CATEGORY_VOWEL:
         knn = knn_vowel
+    elif category_num == CATEGORY_WORD:
+   
+        return detect_word(data)
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))
