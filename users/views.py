@@ -59,10 +59,14 @@ def NameCheck(request):
 
 from .serializers import CustomTokenObtainPairSerializer
 
+from .serializers import CustomTokenRefreshSerializer
+
 from rest_framework_simplejwt.views import TokenObtainPairView
 class CustomTokenObtainPairView(TokenObtainPairView):
     # Replace the serializer with your custom
 
-        serializer_class = CustomTokenObtainPairSerializer
-   
+    serializer_class = CustomTokenObtainPairSerializer
 
+from rest_framework_simplejwt.views import TokenRefreshView 
+class CustomTokenRefreshView(TokenRefreshView):
+    serializer_class = CustomTokenRefreshSerializer

@@ -14,7 +14,7 @@ bcrypt
 django_storages
 boto3
 # AI
-opencv-python
+#opencv-python
 
 
 ## AI_WORD
