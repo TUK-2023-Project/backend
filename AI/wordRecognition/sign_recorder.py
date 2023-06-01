@@ -29,8 +29,6 @@ class SignRecorder(object):
         left_hand_list = self.recorded_results["left"]
         right_hand_list = self.recorded_results["right"]
 
-
-
         recorded_sign = SignModel(left_hand_list, right_hand_list)
 
         self.reference_signs = dtw_distances(recorded_sign, self.reference_signs)
@@ -46,7 +44,7 @@ class SignRecorder(object):
         # Count the occurrences of each sign and sort them by descending order
         sign_counter = Counter(sign_names).most_common()
         # print("sign_counter")
-        # print(sign_counter)
+        #print(sign_counter)
      
         self.reference_signs["distance"].values[:] = 0
 
