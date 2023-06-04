@@ -149,6 +149,7 @@ class SignView(APIView):
             else:
                 three_word=random.sample(wordinput,3)
 
+
             first = SignWord.objects.get(sign_id=three_word[0])
             firstserialize = Randomserializer(first).data
         
@@ -158,7 +159,8 @@ class SignView(APIView):
             third = SignWord.objects.get(sign_id=three_word[2])
             thirdserialize = Randomserializer(third).data
 
-            answerone=random.sample(wordinput,1)
+            answerone=random.sample(three_word,1)
+          
             answer = SignWord.objects.get(sign_id=answerone[0])
         ###문제를 다 풀었을 경우 리턴값을 따로 만들자
         
