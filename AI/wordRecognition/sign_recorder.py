@@ -44,9 +44,11 @@ class SignRecorder(object):
         # Count the occurrences of each sign and sort them by descending order
         sign_counter = Counter(sign_names).most_common()
         # print("sign_counter")
-        #print(sign_counter)
+        print(sign_counter)
      
         self.reference_signs["distance"].values[:] = 0
+
+      
 
 
         predicted_sign, count = sign_counter[0]

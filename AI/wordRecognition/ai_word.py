@@ -6,8 +6,12 @@ from AI.wordRecognition.sign_recorder import SignRecorder
 # 데이터셋 정보를 가져옴
 
 
+# videos = load_dataset()
+# reference_signs = load_reference_signs(videos)
 
 def detect_word(data):
+
+    #videos = create_dataset()
 
     videos = load_dataset()
     reference_signs = load_reference_signs(videos)
