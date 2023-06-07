@@ -26,8 +26,8 @@ class SignRecorder(object):
     def compute_distances(self):
 
         left_hand_list, right_hand_list = [], []
-        left_hand_list = self.recorded_results["left"]
-        right_hand_list = self.recorded_results["right"]
+        left_hand_list = self.recorded_results["right"]
+        right_hand_list = self.recorded_results["left"]
 
         recorded_sign = SignModel(left_hand_list, right_hand_list)
 
