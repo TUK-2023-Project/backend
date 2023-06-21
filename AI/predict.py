@@ -12,8 +12,14 @@ knn_consonant = cv2.ml.KNearest_load('./AI/model/knn_model_consonant_v2.yml')
 gesture = {
     0:'ㄱ', 1:'ㄴ', 2:'ㄷ' , 3:'ㄹ' , 4:'ㅁ' , 5:'ㅂ', 6:'ㅅ', 7:'ㅇ', 8:'ㅈ', 9:'ㅊ', 10:'ㅋ', 11:'ㅌ', 12:'ㅍ',
    13:'ㅎ', 14:'ㅏ', 15:'ㅑ', 16:'ㅓ', 17:'ㅕ', 18:'ㅗ', 19:'ㅛ', 20:'ㅜ', 21:'ㅠ', 22:'ㅡ', 23:'ㅣ', 24:'ㅐ', 25:'ㅒ', 26:'ㅔ', 27:'ㅖ',
-   28:'ㅚ', 29:'ㅟ', 30:'ㅢ'
+   28:'ㅚ', 29:'ㅟ', 30:'ㅢ',
 }
+
+gesture_word = {
+    "find" : "찾다", "happy" : "행복" , "new" : "새롭다", "hi" : "안녕하세요", "meet" : "만나다", "name" : "이름"
+}
+
+
 
 
 
@@ -62,7 +68,7 @@ def run(data, category_num):
         knn = knn_vowel
     elif category_num == CATEGORY_WORD:
    
-        return detect_word(data)
+        return gesture_word[detect_word(data)]
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))
