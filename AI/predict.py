@@ -16,7 +16,7 @@ gesture = {
 }
 
 gesture_word = {
-    "find" : "찾다", "happy" : "행복" , "new" : "새롭다", "hi" : "안녕하세요", "meet" : "만나다", "name" : "이름"
+    "find" : "찾다", "happy" : "행복" , "new" : "새롭다", "hi" : "안녕하세요", "meet" : "만나다", "name" : "이름", "cow":"소"
 }
 
 
