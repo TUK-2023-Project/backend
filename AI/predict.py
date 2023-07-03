@@ -59,7 +59,7 @@ def predict_one_gesture(data,model):
     return idx
 
 
-def run(data, category_num):
+def run(data, category_num, targetWord):
     # if data == []:
     #     return None
     if category_num == CATEGORY_CONSONANT:
@@ -68,9 +68,9 @@ def run(data, category_num):
         knn = knn_vowel
     elif category_num == CATEGORY_WORD:
    
-        return gesture_word[detect_word(data)]
+        return gesture_word[detect_word(data)] == targetWord
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))
 
-    return gesture[predict_most_probable_gesture(data, knn)]
+    return gesture[predict_most_probable_gesture(data, knn)] == targetWord
