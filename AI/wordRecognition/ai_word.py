@@ -10,7 +10,7 @@ reference_signs = load_reference_signs(videos)
 
 def detect_word(data):
 
-    copyReference = copy.copy(reference_signs)
+    copyReference = copy.copy(reference_signs['1'])
     sign_recorder = SignRecorder(copyReference)
 
     sign_detected = sign_recorder.process_results(data)

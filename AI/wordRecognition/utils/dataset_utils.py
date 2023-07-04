@@ -28,33 +28,37 @@ def create_dataset():
     
 
 def load_dataset():
-   
-     # 디렉토리를 순회하면서 ".pickle" 확장자를 가진 모든 파일의 이름을 찾아 리스트 생성
-    dataset = [
-        file_name.replace(".pickle", "").replace("pose_", "")
-        for root, dirs, files in os.walk(os.path.join("AI/wordRecognition/data", "dataset"))
-        for file_name in files
-        if file_name.endswith(".pickle") and file_name.startswith("pose_")
-    ]
+    dataset = {}
+    base_dir = os.path.join("AI/wordRecognition/data", "dataset")
+    categories = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
+    
+    for category in categories:
+        cat_path = os.path.join(base_dir, category)
+        dataset[category] = [
+            file_name.replace(".pickle", "").replace("pose_", "")
+            for root, dirs, files in os.walk(cat_path)
+            for file_name in files
+            if file_name.endswith(".pickle") and file_name.startswith("pose_")
+        ]
 
     return dataset
 
 
 def load_reference_signs(videos):
-    reference_signs = {"name": [], "sign_model": [], "distance": []}
-    for video_name in videos:
-        sign_name = video_name.split("-")[0]
-        path = os.path.join("AI/wordRecognition/data", "dataset", sign_name, video_name)
+    reference_signs = {}
+    for category, video_names in videos.items():
+        signs = {"name": [], "sign_model": [], "distance": []}
+        for video_name in video_names:
+            sign_name = video_name.split("-")[0]
+            path = os.path.join("AI/wordRecognition/data", "dataset", category, sign_name, video_name)
 
-        left_hand_list = load_array(os.path.join(path, f"lh_{video_name}.pickle"))
-        right_hand_list = load_array(os.path.join(path, f"rh_{video_name}.pickle"))
+            left_hand_list = load_array(os.path.join(path, f"lh_{video_name}.pickle"))
+            right_hand_list = load_array(os.path.join(path, f"rh_{video_name}.pickle"))
 
-        reference_signs["name"].append(sign_name)
-        reference_signs["sign_model"].append(SignModel(left_hand_list, right_hand_list))
-        reference_signs["distance"].append(0)
-    
-    reference_signs = pd.DataFrame(reference_signs, dtype=object)
-    # print(
-    #     f'Dictionary count: {reference_signs[["name", "sign_model"]].groupby(["name"]).count()}'
-    # )
+            signs["name"].append(sign_name)
+            signs["sign_model"].append(SignModel(left_hand_list, right_hand_list))
+            signs["distance"].append(0)
+
+        reference_signs[category] = pd.DataFrame(signs, dtype=object)
+
     return reference_signs
