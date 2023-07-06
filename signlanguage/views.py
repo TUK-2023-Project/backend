@@ -121,7 +121,7 @@ class SignView(APIView):
             #테스트 할때 미리 db에 수어정보 업로드 시켜서 테스트 해야함       
             id_list=SignWord.objects.filter(wordtype=category_id).values("sign_id")
             count = id_list.count()
-            print(date)
+    
       
             for i in range(count):
                
@@ -138,16 +138,29 @@ class SignView(APIView):
             if(date[0]!="0"):
                 for i in date:
                     wordinput.remove(i) #wordinput에 정답 후보들만 남기기
-            
+        
             if(len(wordinput)<3):
                 three_word=wordinput[:]
   
-                for i in random.sample(date,3-len(wordinput)): #맞춘 정답주에서 필요한 만큼만 랜덤값 추출
+                for i in random.sample(date,3-len(three_word)): #맞춘 정답주에서 필요한 만큼만 랜덤값 추출
                     three_word.append(str(i))
 
-
+                print("정답후보문제")
+                print(wordinput)
+                print("출제 문제")
+                print(three_word)
+                answerone=random.sample(wordinput,1)
+            
+                answer = SignWord.objects.get(sign_id=answerone[0])
             else:
                 three_word=random.sample(wordinput,3)
+                print("출제문제")
+                print(three_word)
+                answerone=random.sample(three_word,1)
+               
+                answer = SignWord.objects.get(sign_id=answerone[0])
+                print("정답문제")
+                print(answer)
 
 
             first = SignWord.objects.get(sign_id=three_word[0])
@@ -158,10 +171,7 @@ class SignView(APIView):
     
             third = SignWord.objects.get(sign_id=three_word[2])
             thirdserialize = Randomserializer(third).data
-
-            answerone=random.sample(three_word,1)
-          
-            answer = SignWord.objects.get(sign_id=answerone[0])
+      
         ###문제를 다 풀었을 경우 리턴값을 따로 만들자
         
             return JsonResponse({"questions" : [
