@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from AI.constants import gesture, gesture_word
 from AI.wordRecognition.ai_word import detect_word
 
 CATEGORY_CONSONANT = 1
@@ -9,20 +10,13 @@ CATEGORY_WORD = 3
 knn_vowel = cv2.ml.KNearest_load('./AI/model/knn_model_vowel_v2.yml')
 knn_consonant = cv2.ml.KNearest_load('./AI/model/knn_model_consonant_v2.yml')
 
-gesture = {
-    0:'ㄱ', 1:'ㄴ', 2:'ㄷ' , 3:'ㄹ' , 4:'ㅁ' , 5:'ㅂ', 6:'ㅅ', 7:'ㅇ', 8:'ㅈ', 9:'ㅊ', 10:'ㅋ', 11:'ㅌ', 12:'ㅍ',
-   13:'ㅎ', 14:'ㅏ', 15:'ㅑ', 16:'ㅓ', 17:'ㅕ', 18:'ㅗ', 19:'ㅛ', 20:'ㅜ', 21:'ㅠ', 22:'ㅡ', 23:'ㅣ', 24:'ㅐ', 25:'ㅒ', 26:'ㅔ', 27:'ㅖ',
-   28:'ㅚ', 29:'ㅟ', 30:'ㅢ',
-}
-
-gesture_word = {
-    "find" : "찾다", "happy" : "행복" , "new" : "새롭다", "hi" : "안녕하세요", "meet" : "만나다", "name" : "이름", "cow":"소"
-}
 
 
-
-
-
+def get_key_from_value(word):
+    for key, value in gesture_word.items():
+        if value[0] == word:
+            return key
+    return None
 
 def predict_most_probable_gesture(dataList, model):
     freq = {key: 0 for key in gesture}
@@ -59,18 +53,18 @@ def predict_one_gesture(data,model):
     return idx
 
 
-def run(data, category_num):
+def run(data, category_num, targetWord):
     # if data == []:
     #     return None
     if category_num == CATEGORY_CONSONANT:
         knn = knn_consonant
     elif category_num == CATEGORY_VOWEL:
         knn = knn_vowel
-    elif category_num == CATEGORY_WORD:
+    elif category_num >= CATEGORY_WORD:
    
-        return gesture_word[detect_word(data)]
+        return gesture_word[detect_word(data,get_key_from_value(targetWord))][0] == targetWord
 
     else:
         raise ValueError("Invalid categoryNum: {}".format(category_num))
 
-    return gesture[predict_most_probable_gesture(data, knn)]
+    return gesture[predict_most_probable_gesture(data, knn)] == targetWord

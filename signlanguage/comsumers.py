@@ -10,8 +10,9 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         media_pipe = data['message']
         category_id = data.get('categoryId', 1)
+        targetWord = data.get('word')
 
-        if category_id == 3:
+        if category_id >= 3:
    
             parsedData = {'left': [], 'right': []}
 
@@ -28,7 +29,7 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
                 parsedData['left'].append(left_list)
                 parsedData['right'].append(right_list)
 
-            result = predict.run(parsedData, category_id)
+            result = predict.run(parsedData, category_id, targetWord)
     
             await self.send(text_data=json.dumps({
                 'message': result
@@ -43,7 +44,7 @@ class SignLanguageConsumer(AsyncWebsocketConsumer):
                         landmarks.append({"landmarks": sub_item['landmarks']})
 
 
-            result = predict.run(landmarks, category_id)
+            result = predict.run(landmarks, category_id, targetWord)
     
             await self.send(text_data=json.dumps({
                 'message': result
