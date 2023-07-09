@@ -26,7 +26,7 @@ def get_user_id_from_token(token):
         raise jwt.exceptions.ExpiredSignatureError(TOKEN_EXPIRE)
 
     except jwt.exceptions.DecodeError:
-        raise jwt.exceptions.DecodeError(TOKEN_VAILD)
+        raise jwt.exceptions.DecodeError(TOKEN_INVAILD)
     user_id = decoded_token['user_id']
  
     user = UserData.objects.filter(id=user_id, is_deleted=False).first()
