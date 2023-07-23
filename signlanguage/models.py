@@ -8,6 +8,7 @@ class SignWord(models.Model):
     wordtype = models.CharField(max_length=100)
     context = models.CharField(max_length=100)
     photo_url = models.CharField(max_length=100,default=False)
+    video_url = models.CharField(max_length=200,default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     updated_at = models.DateTimeField(auto_now=True, null=False)
     is_deleted=models.BooleanField(default=False)

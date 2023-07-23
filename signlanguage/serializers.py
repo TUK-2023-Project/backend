@@ -7,14 +7,16 @@ class Signserializer(serializers.ModelSerializer):
     class Meta:
         model = SignWord  # 가져올 모델명
         # 아래 2옵션 중 택 1
-        fields = ["word", "context", "photo_url"] 
+        fields = ["word", "context", "photo_url","video_url"] 
+
+
 
 class Randomserializer(serializers.ModelSerializer):
 
     class Meta:
         model = SignWord  # 가져올 모델명
         # 아래 2옵션 중 택 1
-        fields = ["sign_id", "word", "photo_url"] 
+        fields = ["sign_id", "word", "photo_url","video_url"] 
 
 class Answerserializer(serializers.ModelSerializer):
 
