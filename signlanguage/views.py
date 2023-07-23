@@ -83,8 +83,8 @@ def get_info(request):
         # sign_id = request.POST['sign_id']
 
           
-            id=SignWord.objects.get(sign_id = sign_id)
-            userserialize = Signserializer(id).data
+            sign_id=SignWord.objects.get(sign_id = sign_id)
+            userserialize = Signserializer(sign_id).data
             return JsonResponse({"sign_language_info"  :userserialize
             
             }     
@@ -179,15 +179,44 @@ class SignView(APIView):
 
             Answerserialize=Answerserializer(answer).data
     
-            
+                    
             return JsonResponse({"questions" : [
-                firstserialize,
-                secondserialize,
-                thirdserialize,
-
+                {
+                "id":first.sign_id,
+                "word":first.word,
+                "photo_url":first.photo_url,
+                "video_url": first.video_url
+                },
+                    {
+                "id":second.sign_id,
+                "word":second.word,
+                "photo_url":second.photo_url,
+                 "video_url": first.video_url
+                },
+                    {
+                "id":third.sign_id,
+                "word":third.word,
+                "photo_url":third.photo_url,
+                 "video_url": first.video_url
+                },
+        
             ],
-            "answer":Answerserialize
+            "answer":{
+                "id":answer.sign_id,
+                "word":answer.word
+            }
             })
+
+
+
+            # return JsonResponse({"questions" : [
+            #     firstserialize,
+            #     secondserialize,
+            #     thirdserialize,
+
+            # ],
+            # "answer":Answerserialize
+            # })
 
            
             
