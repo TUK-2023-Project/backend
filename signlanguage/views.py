@@ -82,21 +82,15 @@ def get_info(request):
 
         # sign_id = request.POST['sign_id']
 
-            if(int(sign_id)<200):
-                photo_sign_id=SignWord.objects.get(sign_id = sign_id)
-                userserialize = Signserializer(photo_sign_id).data
-                return JsonResponse({"sign_language_info"  :userserialize
-                
-                }     
-                )
+          
+            id=SignWord.objects.get(sign_id = sign_id)
+            userserialize = Signserializer(id).data
+            return JsonResponse({"sign_language_info"  :userserialize
             
-            else:
-                video_sign_id=SignWord.objects.get(sign_id = sign_id)
-                userserialize = Signvideoserializer(video_sign_id).data
-                return JsonResponse({"sign_language_info"  :userserialize
-                
-                }     
-                )
+            }     
+            )
+            
+           
 
             
 
@@ -182,67 +176,24 @@ class SignView(APIView):
     
             third = SignWord.objects.get(sign_id=three_word[2])
             thirdserialize = Randomserializer(third).data
-    
-        ###문제를 다 풀었을 경우 리턴값을 따로 만들자
-            if(int(category_id)<2):
-                return JsonResponse({"questions" : [
-                    {
-                    "id":first.sign_id,
-                    "word":first.word,
-                    "photo_url":first.photo_url
-                    },
-                        {
-                    "id":second.sign_id,
-                    "word":second.word,
-                    "photo_url":second.photo_url
-                    },
-                        {
-                    "id":third.sign_id,
-                    "word":third.word,
-                    "photo_url":third.photo_url
-                    },
-            
-                ],
-                "answer":{
-                    "id":answer.sign_id,
-                    "word":answer.word
-                }
-                })
 
-            else:
-                return JsonResponse({"questions" : [
-                    {
-                    "id":first.sign_id,
-                    "word":first.word,
-                    "video_url":first.video_url
-                    },
-                        {
-                    "id":second.sign_id,
-                    "word":second.word,
-                    "video_url":second.video_url
-                    },
-                        {
-                    "id":third.sign_id,
-                    "word":third.word,
-                    "video_url":third.video_url
-                    },
+            Answerserialize=Answerserializer(answer).data
+    
             
-                ],
-                "answer":{
-                    "id":answer.sign_id,
-                    "word":answer.word
-                }
-                })
+            return JsonResponse({"questions" : [
+                firstserialize,
+                secondserialize,
+                thirdserialize,
+
+            ],
+            "answer":Answerserialize
+            })
+
+           
+            
 
         except Exception as e :
             return JsonResponse({"error":str(e)})
 
 
-        # return JsonResponse({"questions" : [
-        #     firstserialize,
-        #     secondserialize,
-        #     thirdserialize,
-
-        # ],
-        # "answer":Answerserializer
-        # })
+   
