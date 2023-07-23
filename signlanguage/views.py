@@ -81,12 +81,24 @@ def get_info(request):
             # sign_id = data.get('sign_id', None)
 
         # sign_id = request.POST['sign_id']
-            a=SignWord.objects.get(sign_id = sign_id)
-            userserialize = Signserializer(a).data
-            return JsonResponse({"sign_language_info"  :userserialize
+
+            if(int(sign_id)<200):
+                photo_sign_id=SignWord.objects.get(sign_id = sign_id)
+                userserialize = Signserializer(photo_sign_id).data
+                return JsonResponse({"sign_language_info"  :userserialize
+                
+                }     
+                )
             
-            }     
-              )
+            else:
+                video_sign_id=SignWord.objects.get(sign_id = sign_id)
+                userserialize = Signvideoserializer(video_sign_id).data
+                return JsonResponse({"sign_language_info"  :userserialize
+                
+                }     
+                )
+
+            
 
     except Exception as e :
         return JsonResponse({"error":str(e)})
@@ -114,6 +126,11 @@ class SignView(APIView):
         try:
             wordinput=[]
             category_id = request.GET.get('category_id', None)
+
+            
+
+
+        
             date=self.request.query_params.get('solvedlist')
             date=date.split(',')
 
@@ -122,18 +139,18 @@ class SignView(APIView):
             id_list=SignWord.objects.filter(wordtype=category_id).values("sign_id")
             count = id_list.count()
     
-      
+    
             for i in range(count):
-               
+            
                 wordinput.append( str(id_list[i]["sign_id"]))
 
-     
+    
             wordinputlist = wordinput[:] #wordinputlist에 원본 값 저장
         
             if(len(wordinput)==len(date)):
-                print("모든 문제 다 풀었습니다")
+                
                 return JsonResponse({"state" : "clear"})
-            print(date)
+    
 
             if(date[0]!="0"):
                 for i in date:
@@ -141,26 +158,20 @@ class SignView(APIView):
         
             if(len(wordinput)<3):
                 three_word=wordinput[:]
-  
+
                 for i in random.sample(date,3-len(three_word)): #맞춘 정답주에서 필요한 만큼만 랜덤값 추출
                     three_word.append(str(i))
 
-                print("정답후보문제")
-                print(wordinput)
-                print("출제 문제")
-                print(three_word)
                 answerone=random.sample(wordinput,1)
             
                 answer = SignWord.objects.get(sign_id=answerone[0])
             else:
                 three_word=random.sample(wordinput,3)
-                print("출제문제")
-                print(three_word)
+                
                 answerone=random.sample(three_word,1)
-               
+            
                 answer = SignWord.objects.get(sign_id=answerone[0])
-                print("정답문제")
-                print(answer)
+    
 
 
             first = SignWord.objects.get(sign_id=three_word[0])
@@ -171,32 +182,58 @@ class SignView(APIView):
     
             third = SignWord.objects.get(sign_id=three_word[2])
             thirdserialize = Randomserializer(third).data
-      
+    
         ###문제를 다 풀었을 경우 리턴값을 따로 만들자
-        
-            return JsonResponse({"questions" : [
-                {
-                "id":first.sign_id,
-                "word":first.word,
-                "photo_url":first.photo_url
-                },
+            if(int(category_id)<2):
+                return JsonResponse({"questions" : [
                     {
-                "id":second.sign_id,
-                "word":second.word,
-                "photo_url":second.photo_url
-                },
+                    "id":first.sign_id,
+                    "word":first.word,
+                    "photo_url":first.photo_url
+                    },
+                        {
+                    "id":second.sign_id,
+                    "word":second.word,
+                    "photo_url":second.photo_url
+                    },
+                        {
+                    "id":third.sign_id,
+                    "word":third.word,
+                    "photo_url":third.photo_url
+                    },
+            
+                ],
+                "answer":{
+                    "id":answer.sign_id,
+                    "word":answer.word
+                }
+                })
+
+            else:
+                return JsonResponse({"questions" : [
                     {
-                "id":third.sign_id,
-                "word":third.word,
-                "photo_url":third.photo_url
-                },
-        
-            ],
-            "answer":{
-                "id":answer.sign_id,
-                "word":answer.word
-            }
-            })
+                    "id":first.sign_id,
+                    "word":first.word,
+                    "video_url":first.video_url
+                    },
+                        {
+                    "id":second.sign_id,
+                    "word":second.word,
+                    "video_url":second.video_url
+                    },
+                        {
+                    "id":third.sign_id,
+                    "word":third.word,
+                    "video_url":third.video_url
+                    },
+            
+                ],
+                "answer":{
+                    "id":answer.sign_id,
+                    "word":answer.word
+                }
+                })
+
         except Exception as e :
             return JsonResponse({"error":str(e)})
 

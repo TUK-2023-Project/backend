@@ -9,6 +9,13 @@ class Signserializer(serializers.ModelSerializer):
         # 아래 2옵션 중 택 1
         fields = ["word", "context", "photo_url"] 
 
+class Signvideoserializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SignWord  # 가져올 모델명
+        # 아래 2옵션 중 택 1
+        fields = ["word", "context", "video_url"] 
+
 class Randomserializer(serializers.ModelSerializer):
 
     class Meta:
