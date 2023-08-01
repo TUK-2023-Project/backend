@@ -120,11 +120,7 @@ class SignView(APIView):
         try:
             wordinput=[]
             category_id = request.GET.get('category_id', None)
-
-            
-
-
-        
+       
             date=self.request.query_params.get('solvedlist')
             date=date.split(',')
 
@@ -179,7 +175,6 @@ class SignView(APIView):
 
             Answerserialize=Answerserializer(answer).data
     
-                    
             return JsonResponse({"questions" : [
                 {
                 "id":first.sign_id,
@@ -191,13 +186,13 @@ class SignView(APIView):
                 "id":second.sign_id,
                 "word":second.word,
                 "photo_url":second.photo_url,
-                 "video_url": first.video_url
+                 "video_url": second.video_url
                 },
                     {
                 "id":third.sign_id,
                 "word":third.word,
                 "photo_url":third.photo_url,
-                 "video_url": first.video_url
+                 "video_url": third.video_url
                 },
         
             ],
